@@ -16,7 +16,7 @@ jobs:
         uses: ./
         with:
           tag_name: v1.0.0
-          release_name: Release v1.0.0
+          name: Release v1.0.0
           body: |
             Init action
           draft: true

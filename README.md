@@ -45,7 +45,7 @@ steps:
     uses: joutvhu/create-release@v1
     with:
       tag_name: v1.0.0
-      release_name: Release v1.0.0
+      name: Release v1.0.0
       body: |
         Changes in this Release
         - First Change
