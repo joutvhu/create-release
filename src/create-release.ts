@@ -75,8 +75,7 @@ export async function deleteReleaseAssets(
                     } else
                         throw new Error(errorMessage);
                 } else {
-                    core.debug(`Updating release ${releaseData.id}`);
-                    const updateResponse = await github.rest.repos.updateRelease({
+                    const params: RestEndpointMethodTypes["repos"]["updateRelease"]["parameters"] = {
                         release_id: releaseData.id,
                         owner: inputs.owner,
                         repo: inputs.repo,
@@ -89,7 +88,9 @@ export async function deleteReleaseAssets(
                         draft: inputs.draft,
                         prerelease: inputs.prerelease,
                         make_latest: inputs.makeLatest
-                    });
+                    };
+                    core.debug(`Updating release ${releaseData.id} with parms: ${JSON.stringify(params)}`);
+                    const updateResponse = await github.rest.repos.updateRelease(params);
 
                     if (!isSuccessStatusCode(updateResponse.status))
                         throw new Error(`Unexpected http ${updateResponse.status} during update release.`);
@@ -111,8 +112,7 @@ export async function deleteReleaseAssets(
                 core.warning('Release already exists.');
             }
         } else {
-            core.debug(`Creating release ${inputs.name}`);
-            const createResponse = await github.rest.repos.createRelease({
+            const params: RestEndpointMethodTypes["repos"]["createRelease"]["parameters"] = {
                 owner: inputs.owner,
                 repo: inputs.repo,
                 tag_name: inputs.tag,
@@ -124,7 +124,9 @@ export async function deleteReleaseAssets(
                 draft: inputs.draft,
                 prerelease: inputs.prerelease,
                 make_latest: inputs.makeLatest
-            });
+            };
+            core.debug(`Creating release ${inputs.name} with parms: ${JSON.stringify(params)}`);
+            const createResponse = await github.rest.repos.createRelease(params);
 
             if (!isSuccessStatusCode(createResponse.status))
                 throw new Error(`Unexpected http ${createResponse.status} during create release.`);
@@ -133,6 +135,7 @@ export async function deleteReleaseAssets(
             core.info('Create release has finished successfully.');
         }
     } catch (err: any) {
+        core.debug(`Error status: ${err.status}`);
         core.setFailed(err.message);
     }
 })();
