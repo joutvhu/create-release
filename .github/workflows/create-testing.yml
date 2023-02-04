@@ -21,8 +21,9 @@ jobs:
           name: Release v1.0.0
           body: |
             Init action
+          on_release_exists: update
+          remove_assets: true
           draft: false
           prerelease: true
-          debug: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
