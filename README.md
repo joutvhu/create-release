@@ -21,7 +21,7 @@ For more information on these inputs, see the [API Documentation](https://develo
 - `target_commitish` : Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit
 - `discussion_category_name`: When provided this will generate a discussion of the specified category. The category must exist otherwise this will cause the action to fail. This isn't used with draft releases.
 - `generate_release_notes`: Indicates if release notes should be automatically generated.
-- `on_release_exists`: Indicate what to do if a release already exists. Options: `skip`, `error`, `update`, `update_only_draft`, `update_only_prerelease`, `update_only_draft/prerelease`, `update_only_draft_or_skip`, `update_only_prerelease_or_skip`, `update_only_draft/prerelease_or_skip`. Default `skip`.
+- `on_release_exists`: Indicate what to do if a release already exists. Options: `skip`, `update`, `update_only_unreleased`, `update_only_unreleased_or_skip`, `error`. Default `skip`.
 - `remove_assets`: Indicates if existing release artifacts should be removed.
 
 The `body_path` is valuable for dynamically creating a `.md` within code commits and even within the Github Action steps leading up to the `create-release`.

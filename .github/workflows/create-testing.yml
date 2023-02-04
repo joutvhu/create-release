@@ -21,8 +21,8 @@ jobs:
           name: Release v1.0.0
           body: |
             Init action
-          draft: true
-          prerelease: false
+          draft: false
+          prerelease: true
           debug: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

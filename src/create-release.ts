@@ -52,7 +52,7 @@ export async function deleteReleaseAssets(
             core.warning(`Unexpected http ${e.status} during get release: ${e.message}`);
         }
 
-        if (releaseData != null) {
+        if (releaseData?.id != null) {
             if (inputs.onReleaseExists === 'error')
                 throw new Error('Release already exists.');
             if (inputs.onReleaseExists.startsWith('update')) {

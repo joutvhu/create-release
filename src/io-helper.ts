@@ -19,9 +19,7 @@ export interface ReleaseInputs {
     prerelease: boolean;
     makeLatest: boolean;
 
-    onReleaseExists: 'skip' | 'error' | 'update'
-        | 'update_only_draft' | 'update_only_prerelease' | 'update_only_draft/prerelease'
-        | 'update_only_draft_or_skip' | 'update_only_prerelease_or_skip' | 'update_only_draft/prerelease_or_skip';
+    onReleaseExists: 'skip' | 'error' | 'update' | 'update_only_unreleased' | 'update_only_unreleased_or_skip';
     removeAssets?: boolean;
 
     debug: boolean;
