@@ -122,10 +122,9 @@ export async function deleteReleaseAssets(
                 discussion_category_name: inputs.discussionCategoryName,
                 generate_release_notes: inputs.generateReleaseNotes,
                 draft: inputs.draft,
-                prerelease: inputs.prerelease,
-                make_latest: inputs.makeLatest
+                prerelease: inputs.prerelease
             };
-            core.debug(`Creating release ${inputs.name} with parms: ${JSON.stringify(params)}`);
+            core.debug(`Creating release ${inputs.tag} with parms: ${JSON.stringify(params)}`);
             const createResponse = await github.rest.repos.createRelease(params);
 
             if (!isSuccessStatusCode(createResponse.status))
