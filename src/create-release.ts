@@ -39,41 +39,45 @@ export async function deleteReleaseAssets(
 
         core.info(`Start create release with:\n  owner: ${inputs.owner}\n  repo: ${inputs.repo}`);
 
-        const releaseResponse = await github.rest.repos.getReleaseByTag({
-            owner: inputs.owner,
-            repo: inputs.repo,
-            tag: inputs.tag
-        });
+        let releaseData: RestEndpointMethodTypes['repos']['getReleaseByTag']['response']['data'] | undefined;
+        try {
+            const releaseResponse = await github.rest.repos.getReleaseByTag({
+                owner: inputs.owner,
+                repo: inputs.repo,
+                tag: inputs.tag
+            });
 
-        if (!isSuccessStatusCode(releaseResponse.status))
-            throw new Error(`Unexpected http ${releaseResponse.status} during get release.`);
+            releaseData = releaseResponse.data;
+        } catch (e: any) {
+            core.warning(`Unexpected http ${e.status} during get release: ${e.message}`);
+        }
 
-        if (releaseResponse.data != null) {
+        if (releaseData != null) {
             if (inputs.onReleaseExists === 'error')
                 throw new Error('Release already exists.');
             if (inputs.onReleaseExists.startsWith('update')) {
                 let errorMessage: string | undefined;
                 if (inputs.onReleaseExists.startsWith('update_only_draft') &&
-                    !releaseResponse.data.draft) {
-                    errorMessage = `Tried to update "${releaseResponse.data.name ?? 'release'}" which is neither a draft.`;
+                    !releaseData.draft) {
+                    errorMessage = `Tried to update '${releaseData.name ?? 'release'}' which is neither a draft.`;
                 } else if (inputs.onReleaseExists.startsWith('update_only_prerelease') &&
-                    !releaseResponse.data.prerelease) {
-                    errorMessage = `Tried to update "${releaseResponse.data.name ?? 'release'}" which is neither a prerelease.`;
+                    !releaseData.prerelease) {
+                    errorMessage = `Tried to update '${releaseData.name ?? 'release'}' which is neither a prerelease.`;
                 } else if (inputs.onReleaseExists.startsWith('update_only_draft/prerelease') &&
-                    !releaseResponse.data.draft && !releaseResponse.data.prerelease) {
-                    errorMessage = `Tried to update "${releaseResponse.data.name ?? 'release'}" which is neither a draft or prerelease.`;
+                    !releaseData.draft && !releaseData.prerelease) {
+                    errorMessage = `Tried to update '${releaseData.name ?? 'release'}' which is neither a draft or prerelease.`;
                 }
 
                 if (errorMessage != null) {
                     if (inputs.onReleaseExists.endsWith('_or_skip')) {
-                        setOutputs(releaseResponse.data, inputs.debug);
+                        setOutputs(releaseData, inputs.debug);
                         core.warning(errorMessage);
                     } else
                         throw new Error(errorMessage);
                 } else {
-                    core.debug(`Updating release ${releaseResponse.data.id}`);
+                    core.debug(`Updating release ${releaseData.id}`);
                     const updateResponse = await github.rest.repos.updateRelease({
-                        release_id: releaseResponse.data.id,
+                        release_id: releaseData.id,
                         owner: inputs.owner,
                         repo: inputs.repo,
                         tag_name: inputs.tag,
@@ -103,7 +107,7 @@ export async function deleteReleaseAssets(
                     core.info('Update release has finished successfully.');
                 }
             } else {
-                setOutputs(releaseResponse.data, inputs.debug);
+                setOutputs(releaseData, inputs.debug);
                 core.warning('Release already exists.');
             }
         } else {
