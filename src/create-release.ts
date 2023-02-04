@@ -37,7 +37,7 @@ export async function deleteReleaseAssets(
         const releaseResponse = await github.rest.repos.getReleaseByTag({
             owner: inputs.owner,
             repo: inputs.repo,
-            tag: inputs.tag,
+            tag: inputs.tag
         });
 
         if (releaseResponse.data != null) {
@@ -63,6 +63,7 @@ export async function deleteReleaseAssets(
                     } else
                         throw new Error(errorMessage);
                 } else {
+                    core.debug(`Updating release ${releaseResponse.data.id}`);
                     const updateResponse = await github.rest.repos.updateRelease({
                         release_id: releaseResponse.data.id,
                         owner: inputs.owner,
@@ -79,6 +80,7 @@ export async function deleteReleaseAssets(
                     });
 
                     if (inputs.removeAssets) {
+                        core.debug(`Deleting release assets.`);
                         await deleteReleaseAssets(github, {
                             release_id: updateResponse.data.id,
                             owner: inputs.owner,
@@ -94,6 +96,7 @@ export async function deleteReleaseAssets(
                 core.warning('Release already exists.');
             }
         } else {
+            core.debug(`Creating release ${inputs.name}`);
             const createResponse = await github.rest.repos.createRelease({
                 owner: inputs.owner,
                 repo: inputs.repo,

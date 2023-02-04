@@ -9723,7 +9723,7 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
             const releaseResponse = yield github.rest.repos.getReleaseByTag({
                 owner: inputs.owner,
                 repo: inputs.repo,
-                tag: inputs.tag,
+                tag: inputs.tag
             });
             if (releaseResponse.data != null) {
                 if (inputs.onReleaseExists === 'error')
@@ -9751,6 +9751,7 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
                             throw new Error(errorMessage);
                     }
                     else {
+                        core.debug(`Updating release ${releaseResponse.data.id}`);
                         const updateResponse = yield github.rest.repos.updateRelease({
                             release_id: releaseResponse.data.id,
                             owner: inputs.owner,
@@ -9766,6 +9767,7 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
                             make_latest: inputs.makeLatest
                         });
                         if (inputs.removeAssets) {
+                            core.debug(`Deleting release assets.`);
                             yield deleteReleaseAssets(github, {
                                 release_id: updateResponse.data.id,
                                 owner: inputs.owner,
@@ -9782,6 +9784,7 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
                 }
             }
             else {
+                core.debug(`Creating release ${inputs.name}`);
                 const createResponse = yield github.rest.repos.createRelease({
                     owner: inputs.owner,
                     repo: inputs.repo,

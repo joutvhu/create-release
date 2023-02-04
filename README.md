@@ -13,7 +13,7 @@ For more information on these inputs, see the [API Documentation](https://develo
 - `owner`: The name of the owner of the repo. Used to identify the owner of the repository.  Used when cutting releases for external repositories.  Default: Current owner
 - `repo`: The name of the repository. Used to identify the repository on which to release.  Used when cutting releases for external repositories. Default: Current repository
 - `tag_name`: The name of the tag for this release
-- `release_name`: The name of the release
+- `name`: The name of the release
 - `body`: Text describing the contents of the release. Optional, and not needed if using `body_path`.
 - `body_path`: A file with contents describing the release. Optional, and not needed if using `body`.
 - `draft`: `true` to create a draft (unpublished) release, `false` to create a published one. Default: `false`
