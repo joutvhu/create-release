@@ -1,0 +1,101 @@
+name: Create Release
+description: GitHub Action to Create Release
+author: Giao Ho
+inputs:
+  owner:
+    # Default: Current owner
+    description: Owner of the repository if it is not the current one.
+    required: false
+  repo:
+    # Default: Current repository
+    description: Repository on which to release.  Used only if you want to create the release on another repo.
+    required: false
+
+  tag_name:
+    description: The name of the tag. This should come from the webhook payload, `github.GITHUB_REF` when a user pushes a new tag
+    required: true
+  name:
+    description: The name of the release. For example, `Release v1.0.1`
+    required: true
+  body:
+    description: Text describing the contents of the tag.
+    required: false
+  body_path:
+    description: Path to file with information about the tag.
+    required: false
+  draft:
+    description: '`true` to create a draft (unpublished) release, `false` to create a published one. Default: `false`'
+    required: false
+    default: false
+  prerelease:
+    description: '`true` to identify the release as a prerelease. `false` to identify the release as a full release. Default: `false`'
+    required: false
+    default: false
+  make_latest:
+    description: Indicates if the release should be the "latest" release or not.
+    required: false
+    default: true
+  target_commitish:
+    description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
+    required: false
+  discussion_category_name:
+    description: When provided this will generate a discussion of the specified category. The category must exist otherwise this will cause the action to fail. This isn't used with draft releases
+    required: false
+  generate_release_notes:
+    description: Indicates if release notes should be automatically generated.
+    required: false
+  on_release_exists:
+    description: 'Indicate what to do if a release already exists. Options: `skip`, `error`, `update`, `update_only_draft`, `update_only_prerelease`, `update_only_draft/prerelease`, `update_only_draft_or_skip`, `update_only_prerelease_or_skip`, `update_only_draft/prerelease_or_skip`'
+    required: false
+    default: skip
+  remove_assets:
+    description: Indicates if existing release artifacts should be removed, Defaults to false.
+    required: false
+    default: false
+
+  debug:
+    description: Show ouputs
+    required: false
+outputs:
+  id:
+    description: The ID of the created Release
+  node_id:
+    description: The node ID
+  url:
+    description: The release url
+  html_url:
+    description: The URL users can navigate to in order to view the release
+  assets_url:
+    description: The release assets url
+  upload_url:
+    description: The URL for uploading assets to the release
+  discussion_url:
+    description: The URL of discussion
+  tarball_url:
+    description: The URL of tarball
+  zipball_url:
+    description: The URL of zipball
+  mentions_count:
+    description: The mentions count
+  name:
+    description: The release name
+  tag_name:
+    description: The git tag associated with the release
+  draft:
+    description: Is draft
+  prerelease:
+    description: Is pre-release
+  target_commitish:
+    description: The release was create to which target branch
+  created_at:
+    description: Created date
+  published_at:
+    description: Published date
+  body:
+    description: The release body
+runs:
+  using: node16
+  main: action/index.js
+branding:
+  icon: tag
+  color: green
