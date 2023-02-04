@@ -4,6 +4,11 @@ import {GitHub} from '@actions/github/lib/utils';
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 import {getInputs, ReleaseInputs, setOutputs} from './io-helper';
 
+export function isSuccessStatusCode(statusCode?: number): boolean {
+    if (!statusCode) return false;
+    return statusCode >= 200 && statusCode < 300;
+}
+
 export async function deleteReleaseAssets(
     github: InstanceType<typeof GitHub>,
     params: RestEndpointMethodTypes['repos']['listReleaseAssets']['parameters']
@@ -39,6 +44,9 @@ export async function deleteReleaseAssets(
             repo: inputs.repo,
             tag: inputs.tag
         });
+
+        if (!isSuccessStatusCode(releaseResponse.status))
+            throw new Error(`Unexpected http ${releaseResponse.status} during get release.`);
 
         if (releaseResponse.data != null) {
             if (inputs.onReleaseExists === 'error')
@@ -79,6 +87,9 @@ export async function deleteReleaseAssets(
                         make_latest: inputs.makeLatest
                     });
 
+                    if (!isSuccessStatusCode(updateResponse.status))
+                        throw new Error(`Unexpected http ${updateResponse.status} during update release.`);
+
                     if (inputs.removeAssets) {
                         core.debug(`Deleting release assets.`);
                         await deleteReleaseAssets(github, {
@@ -110,6 +121,9 @@ export async function deleteReleaseAssets(
                 prerelease: inputs.prerelease,
                 make_latest: inputs.makeLatest
             });
+
+            if (!isSuccessStatusCode(createResponse.status))
+                throw new Error(`Unexpected http ${createResponse.status} during create release.`);
 
             setOutputs(createResponse.data, inputs.debug);
             core.info('Create release has finished successfully.');

@@ -9685,10 +9685,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deleteReleaseAssets = void 0;
+exports.deleteReleaseAssets = exports.isSuccessStatusCode = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const io_helper_1 = __nccwpck_require__(3262);
+function isSuccessStatusCode(statusCode) {
+    if (!statusCode)
+        return false;
+    return statusCode >= 200 && statusCode < 300;
+}
+exports.isSuccessStatusCode = isSuccessStatusCode;
 function deleteReleaseAssets(github, params) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -9725,6 +9731,8 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
                 repo: inputs.repo,
                 tag: inputs.tag
             });
+            if (!isSuccessStatusCode(releaseResponse.status))
+                throw new Error(`Unexpected http ${releaseResponse.status} during get release.`);
             if (releaseResponse.data != null) {
                 if (inputs.onReleaseExists === 'error')
                     throw new Error('Release already exists.');
@@ -9766,6 +9774,8 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
                             prerelease: inputs.prerelease,
                             make_latest: inputs.makeLatest
                         });
+                        if (!isSuccessStatusCode(updateResponse.status))
+                            throw new Error(`Unexpected http ${updateResponse.status} during update release.`);
                         if (inputs.removeAssets) {
                             core.debug(`Deleting release assets.`);
                             yield deleteReleaseAssets(github, {
@@ -9798,6 +9808,8 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
                     prerelease: inputs.prerelease,
                     make_latest: inputs.makeLatest
                 });
+                if (!isSuccessStatusCode(createResponse.status))
+                    throw new Error(`Unexpected http ${createResponse.status} during create release.`);
                 (0, io_helper_1.setOutputs)(createResponse.data, inputs.debug);
                 core.info('Create release has finished successfully.');
             }
