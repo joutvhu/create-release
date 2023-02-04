@@ -9726,42 +9726,47 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
             const inputs = (0, io_helper_1.getInputs)();
             const github = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN);
             core.info(`Start create release with:\n  owner: ${inputs.owner}\n  repo: ${inputs.repo}`);
-            const releaseResponse = yield github.rest.repos.getReleaseByTag({
-                owner: inputs.owner,
-                repo: inputs.repo,
-                tag: inputs.tag
-            });
-            if (!isSuccessStatusCode(releaseResponse.status))
-                throw new Error(`Unexpected http ${releaseResponse.status} during get release.`);
-            if (releaseResponse.data != null) {
+            let releaseData;
+            try {
+                const releaseResponse = yield github.rest.repos.getReleaseByTag({
+                    owner: inputs.owner,
+                    repo: inputs.repo,
+                    tag: inputs.tag
+                });
+                releaseData = releaseResponse.data;
+            }
+            catch (e) {
+                core.warning(`Unexpected http ${e.status} during get release: ${e.message}`);
+            }
+            if (releaseData != null) {
                 if (inputs.onReleaseExists === 'error')
                     throw new Error('Release already exists.');
                 if (inputs.onReleaseExists.startsWith('update')) {
                     let errorMessage;
                     if (inputs.onReleaseExists.startsWith('update_only_draft') &&
-                        !releaseResponse.data.draft) {
-                        errorMessage = `Tried to update "${(_a = releaseResponse.data.name) !== null && _a !== void 0 ? _a : 'release'}" which is neither a draft.`;
+                        !releaseData.draft) {
+                        errorMessage = `Tried to update '${(_a = releaseData.name) !== null && _a !== void 0 ? _a : 'release'}' which is neither a draft.`;
                     }
                     else if (inputs.onReleaseExists.startsWith('update_only_prerelease') &&
-                        !releaseResponse.data.prerelease) {
-                        errorMessage = `Tried to update "${(_b = releaseResponse.data.name) !== null && _b !== void 0 ? _b : 'release'}" which is neither a prerelease.`;
+                        !releaseData.prerelease) {
+                        errorMessage = `Tried to update '${(_b = releaseData.name) !== null && _b !== void 0 ? _b : 'release'}' which is neither a prerelease.`;
                     }
                     else if (inputs.onReleaseExists.startsWith('update_only_draft/prerelease') &&
-                        !releaseResponse.data.draft && !releaseResponse.data.prerelease) {
-                        errorMessage = `Tried to update "${(_c = releaseResponse.data.name) !== null && _c !== void 0 ? _c : 'release'}" which is neither a draft or prerelease.`;
+                        !releaseData.draft && !releaseData.prerelease) {
+                        errorMessage = `Tried to update '${(_c = releaseData.name) !== null && _c !== void 0 ? _c : 'release'}' which is neither a draft or prerelease.`;
                     }
                     if (errorMessage != null) {
                         if (inputs.onReleaseExists.endsWith('_or_skip')) {
-                            (0, io_helper_1.setOutputs)(releaseResponse.data, inputs.debug);
+                            (0, io_helper_1.setOutputs)(releaseData, inputs.debug);
                             core.warning(errorMessage);
                         }
                         else
                             throw new Error(errorMessage);
                     }
                     else {
-                        core.debug(`Updating release ${releaseResponse.data.id}`);
+                        core.debug(`Updating release ${releaseData.id}`);
                         const updateResponse = yield github.rest.repos.updateRelease({
-                            release_id: releaseResponse.data.id,
+                            release_id: releaseData.id,
                             owner: inputs.owner,
                             repo: inputs.repo,
                             tag_name: inputs.tag,
@@ -9789,7 +9794,7 @@ exports.deleteReleaseAssets = deleteReleaseAssets;
                     }
                 }
                 else {
-                    (0, io_helper_1.setOutputs)(releaseResponse.data, inputs.debug);
+                    (0, io_helper_1.setOutputs)(releaseData, inputs.debug);
                     core.warning('Release already exists.');
                 }
             }
