@@ -1,7 +1,7 @@
 {
   "name": "create-release",
   "version": "1.0.0",
-  "description": "",
+  "description": "GitHub Action to create release.",
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.json",
     "release": "ncc build src/create-release.ts -o action && git add -f action/",
