@@ -39,6 +39,8 @@ For more information on these outputs, see the [API Documentation](https://devel
 ### Example
 
 ```yaml
+permissions:
+  contents: write
 steps:
   - name: Create Release
     id: create_release
