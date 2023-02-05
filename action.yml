@@ -1,4 +1,4 @@
-name: Create Release
+name: Create Or Update Release
 description: GitHub Action to Create Release
 author: Giao Ho
 inputs:
