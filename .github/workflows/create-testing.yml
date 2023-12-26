@@ -12,15 +12,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Create release
         uses: ./
         with:
-          tag_name: v1.0.0
-          name: Release v1.0.0
+          tag_name: v1.0.1
+          name: Release v1.0.1
           body: |
-            Init action
+            - Use Node 20
+            - Bump dependencies
           on_release_exists: update
           remove_assets: true
           draft: false
