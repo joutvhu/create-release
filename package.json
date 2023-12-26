@@ -1,6 +1,6 @@
 {
   "name": "create-release",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub Action to create release.",
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.json",
@@ -29,25 +29,25 @@
     "url": "https://github.com/joutvhu/create-release/issues"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1",
-    "tslib": "^2.4.0"
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@tsconfig/recommended": "^1.0.2",
-    "@types/node": "^16.18.11",
-    "@typescript-eslint/eslint-plugin": "^5.50.0",
-    "@typescript-eslint/parser": "^5.50.0",
-    "@vercel/ncc": "^0.36.1",
-    "eslint": "^8.33.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jest": "^27.2.1",
+    "@tsconfig/recommended": "^1.0.3",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "@vercel/ncc": "^0.38.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-promise": "^6.1.1",
-    "jest": "^29.4.1",
-    "prettier": "^2.8.3",
-    "rimraf": "^4.1.2",
-    "typescript": "^4.9.5"
+    "jest": "^29.7.0",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
   }
 }

@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import {InputOptions} from '@actions/core';
+import {getInput, InputOptions} from '@actions/core';
 import {context} from '@actions/github';
 import {Inputs, Outputs} from './constants';
 const fs = require('fs');
@@ -17,7 +17,7 @@ export interface ReleaseInputs {
 
     draft: boolean;
     prerelease: boolean;
-    makeLatest: boolean;
+    makeLatest: 'true' | 'false' | 'legacy';
 
     onReleaseExists: 'skip' | 'error' | 'update' | 'update_only_unreleased' | 'update_only_unreleased_or_skip';
     removeAssets?: boolean;
@@ -97,7 +97,10 @@ export function getInputs(): ReleaseInputs {
 
     result.draft = getBooleanInput(Inputs.Draft, {required: false});
     result.prerelease = getBooleanInput(Inputs.Prerelease, {required: false});
-    result.makeLatest = getBooleanInput(Inputs.MakeLatest, {required: false});
+    result.makeLatest = getInput(Inputs.MakeLatest, {required: false});
+    if (!['true', 'false', 'legacy'].includes(result.makeLatest)) {
+        result.makeLatest = undefined;
+    }
 
     result.debug = getBooleanInput(Inputs.Debug, {required: false});
 
